@@ -27,10 +27,6 @@ Route::get('/product_categories', [productController::class, 'product_categories
 Route::get('/product_subcategories/{id}', [productController::class, 'product_subcategories'])->name('product_subcategories');
 Route::get('/category/{id}', [productController::class, 'get_products_by_category'])->name('category');
 Route::get('/product/{id}', [productController::class, 'get_product'])->name('get_product');
-Route::get('/new_product', [productController::class, 'new_product'])->name('new_product');
-Route::post('/add_product', [productController::class, 'add_product'])->name('add_product');
-Route::get('/change_product/{id}', [productController::class, 'change_product'])->name('change_product');
-Route::post('/update_product', [productController::class, 'update_product'])->name('update_product');
 
 //user
 Route::get('/register_form', [userController::class, 'register_form'])->name('register_form');
@@ -50,3 +46,14 @@ Route::post('/add_post', [blogController::class, 'add_post'])->name('add_post');
 Route::get('/update_post_form/{id}', [blogController::class, 'update_post_form'])->name('update_post_form');
 Route::post('/update_post', [blogController::class, 'update_post'])->name('update_post');
 Route::get('/delete_post/{id}', [blogController::class, 'delete_post'])->name('delete_post');
+
+//admin
+Route::get('/admin/new_product', [productController::class, 'new_product'])->name('new_product');
+Route::post('/admin/add_product', [productController::class, 'add_product'])->name('add_product');
+Route::get('/admin/change_product/{id}', [productController::class, 'change_product'])->name('change_product');
+Route::post('/admin/update_product', [productController::class, 'update_product'])->name('update_product');
+Route::get('/admin/add_post_form', [blogController::class, 'add_post_form'])->name('add_post_form');
+Route::post('/admin/add_post', [blogController::class, 'add_post'])->name('add_post');
+Route::get('/admin/update_post_form/{id}', [blogController::class, 'update_post_form'])->name('update_post_form');
+Route::post('/admin/update_post', [blogController::class, 'update_post'])->name('update_post');
+Route::get('/admin/delete_post/{id}', [blogController::class, 'delete_post'])->name('delete_post');

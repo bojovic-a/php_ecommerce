@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\CategoryHasProducts;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -11,13 +12,21 @@ class productController extends Controller
 {
     //
     public function get_products_by_category(Request $request){
-        $products = Product::where('product_category_id', '=', $request->id)->get();
+        $chp = CategoryHasProducts::where('category_id', '=', $request->id)->get();
+                
+        $products = [];
+
+        foreach($chp as $c){
+            $product = $c->products();
+            $products[] = $product;
+        }               
         $categories = ProductCategory::top_level_categories();
-        return view('website/product/products', ['products'=>$products, 'categories'=>$categories]);
+        return view('website/product/products', ['products' => $products, 'categories'=>$categories]);
     }
     public function get_product(Request $request){
         $product = Product::find($request->id);
-        return view('product', ['product'=>$product]);
+        $topLevelCategories = ProductCategory::top_level_categories();
+        return view('website/product/product', ['product'=>$product, 'categories'=>$topLevelCategories]);
     }
     public function add_to_cart(Request $request){
             
@@ -55,10 +64,10 @@ class productController extends Controller
     }
     public function update_product(Request $request){
         $product = new Product();
-        $product->title = $request->title;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->image_url = $request->image_url;
+        $product->title = $request->input('product_name');
+        $product->description = $request->input('product_description');
+        $product->price = $request->input('product_price');
+        $product->image_url = $request->input('product_image');
 
         $product->update();
 
@@ -66,19 +75,41 @@ class productController extends Controller
     }
     public function new_product(){        
 
-        return view('add_product_form');        
+        $categories = ProductCategory::all();
+    
+        return view('admin/add_product', ['categories' => $categories]);        
 
     }
-    public function add_product(Request $request){
+    public function add_product(Request $request){                
         $product = new Product();
-        $product->title = $request->title;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->image_url = $request->image_url;
+        $product->title = $request->input('product_name');
+        $product->description = $request->input('product_description');
+        $product->price = $request->input('product_price');        
 
-        $product->save();
+        $request->validate([
+            'product_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-        return redirect(route('products'));
+        $imageName = time().'.'.$request->product_image->extension();  
+
+        $request->file('product_image')->move(public_path('images/products'), $imageName);
+        
+        $product->image_url = $imageName;        
+
+        $product->save();        
+
+        $categories = $request->product_categories;
+
+        foreach($categories as $category){
+            
+            $phc = new CategoryHasProducts();            
+            $phc->product_id = $product->id;
+            $phc->category_id = $category;
+
+            $phc->save();
+        }
+
+        return redirect(url('admin/new_product'));
     }
     
     public function product_categories(){

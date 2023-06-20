@@ -46,6 +46,14 @@ return new class extends Migration
             $table->foreign('parent_id')->references('id')->on('product_categories'); 
         });
 
+        Schema::create('category_has_products', function(Blueprint $table){
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('product_id');
+            $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('product_categories');
+            $table->foreign('product_id')->references('id')->on('products');
+        });
 
     }
 
@@ -58,6 +66,7 @@ return new class extends Migration
         Schema::dropIfExists('products');
         Schema::dropIfExists('order_items');
         Schema::dropIfExists('orders');
+        Schema::dropIfExists('category_has_products');
 
     }
 };

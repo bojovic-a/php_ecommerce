@@ -10,7 +10,7 @@ class ProductCategory extends Model
     use HasFactory;
         
     public function products(){
-        return $this->hasMany(Product::class);
+        return $this->hasMany(CategoryHasProducts::class);
     }
     public static function top_level_categories(){
         $tlc = ProductCategory::whereNull('parent_id')->get();
@@ -18,6 +18,7 @@ class ProductCategory extends Model
     }
     public function product_subcategories(){
         $categories = $this->where('parent_id', '=', $this->id)->get();
-        return $categories;
+        return $categories;        
     }
+    
 }
