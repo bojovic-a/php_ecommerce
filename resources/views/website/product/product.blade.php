@@ -21,10 +21,10 @@
                 <p>{{ $product->description }}</p>
                 <div class="row d-flex flex-column justify-content-center">
                     <h3 class="text-center ">{{ $product->price }} $</h3>
-                    <button class="btn btn-danger">Add to cart</button>
+                    <a class="btn btn-danger" href="{{ route('add_to_cart', $product->id ) }}">Add to cart</a>
                 </div>
             </div>
-            <div class="col-md-6"> <img src="{{asset('/images/products/').'/'.$product  ->image_url }}" width="90%" height="95%"> </div>
+            <div class="col-md-6"> <img src="{{asset('/images/products/').'/'.$product->image_url }}" width="90%" height="95%"> </div>
         </div>
     </div>
     

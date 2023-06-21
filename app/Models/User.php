@@ -22,4 +22,8 @@ class User extends Model
     public function posted_products(){
         return $this->hasMany(Product::class);
     }
+    public static function get_by_email($email){
+        $user = User::where('email', '=', $email)->first();
+        return $user;
+    }
 }

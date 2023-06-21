@@ -39,26 +39,44 @@
                 <img class="w-25" src="{{ url('/images/website/Swan-logos_transparent.png') }}" alt="">
             </div>
         </div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">                    
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-center w-100">                    
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav m-auto">
-                <li class="nav-item p-2">
-                <a class="nav-link" href="{{ url('/') }}">Home</a>
-                </li>
-                <li class="nav-item p-2">
-                <a class="nav-link" href="{{ url('/product_categories') }}">Shop</a>
-                </li>        
-                <li class="nav-item p-2">
-                    <a class="nav-link" href="#">Blog</a>
-                </li>        
-                <li class="nav-item p-2">
-                    <a class="nav-link" href="#">About us</a>
-                </li>        
-                <li class="nav-item p-2">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>        
+            <ul class="navbar-nav d-flex justify-content-around w-100">
+                <div class="d-flex flex-row">
+                    <li class="nav-item p-2">
+                    <a class="nav-link" href="{{ url('/') }}">Home</a>
+                    </li>
+                    <li class="nav-item p-2">
+                    <a class="nav-link" href="{{ url('/product_categories') }}">Shop</a>
+                    </li>        
+                    <li class="nav-item p-2">
+                        <a class="nav-link" href="#">Blog</a>
+                    </li>        
+                    <li class="nav-item p-2">
+                        <a class="nav-link" href="#">About us</a>
+                    </li>        
+                    <li class="nav-item p-2">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </div>
+                <div class="d-flex flex-row">
+                @if (isset($user_id))
+                    <li class="nav-item p-2">
+                        <a class="nav-link" href="{{ route('logout') }}">Logout</a>
+                    </li>
+                @else
+                    <li class="nav-item p-2">
+                        <a href="{{ route('login_form') }}" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item p-2">
+                        <a href="{{ route('register_form') }}" class="nav-link">Register</a>
+                    </li>
+                @endif
+                </div>              
             </ul>      
+            
             </div>
+            
         </nav>
     </header>
 

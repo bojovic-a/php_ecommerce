@@ -29,10 +29,14 @@ class productController extends Controller
         return view('website/product/product', ['product'=>$product, 'categories'=>$topLevelCategories]);
     }
     public function add_to_cart(Request $request){
-            
-        if (Order::where('user_id', $request->user_id)->get){
+        
+        if (!$request->session()->get('user_id')){
+            return redirect(route('login_form', ['message'=>'You have to be logged in']));
+        }
+        
+        if (Order::where('user_id', $request->user_id)->get()){
             $order = Order::where(
-                ['user_id', '=', $_SESSION['user_id']],
+                ['user_id', '=', $request->session()->get('user_id')],
                 ['status', '=', 'cart']
                 )->get();
         }

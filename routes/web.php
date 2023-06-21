@@ -33,7 +33,7 @@ Route::get('/register_form', [userController::class, 'register_form'])->name('re
 Route::post('/register', [userController::class, 'register'])->name('register');
 Route::get('/login_form', [userController::class, 'login_form'])->name('login_form');
 Route::post('/login', [userController::class, 'login'])->name('login');
-Route::post('/logout', [userController::class, 'logout'])->name('logout');
+Route::get('/logout', [userController::class, 'logout'])->name('logout');
 Route::get('/profile', [userController::class, 'profile'])->name('profile');
 
 //blog
