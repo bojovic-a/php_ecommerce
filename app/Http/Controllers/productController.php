@@ -33,29 +33,36 @@ class productController extends Controller
         if (!$request->session()->get('user_id')){
             return redirect(route('login_form', ['message'=>'You have to be logged in']));
         }
-        
-        if (Order::where('user_id', $request->user_id)->get()){
-            $order = Order::where(
-                ['user_id', '=', $request->session()->get('user_id')],
-                ['status', '=', 'cart']
-                )->get();
+        $user_id = $request->session()->get('user_id');
+
+        if (Order::get_current_user_order($user_id) != null){
+            $cart = Order::get_current_user_order($user_id);             
         }
         else{
-            $cart = new OrderItem();
+            $cart = Order::new_cart($user_id);            
         }        
-        $cart->product_id = $request->product->id;
-
-        return view('cart', ['cart' => $cart]);
+        
+        $orderItem = OrderItem::new_order_item($cart->id, $request->id);
+        
+        return redirect()->back()->with('message',"This product has been added to your cart.");
 
     }
 
-    public function buy(Request $request){
-        $order = Order::where(
-            ['user_id', '=', $_SESSION['user_id']],
-            ['status', '=', 'cart']
-            )->get();
+    public function cart(Request $request){
+        $order = Order::get_current_user_order($request->session()->get('user_id'));
+        $categories = ProductCategory::top_level_categories();
+        if(!$order){
+            return view('website/product/cart', ['categories'=>$categories, 'message'=>'Your cart is empty']);
+        }
+        $orderItems = $order->order_items()->get();        
+        
+        return view('website/product/cart', ['order'=>$order, 'orderItems'=>$orderItems, 'categories'=>$categories]);
+    }
 
-        $order->status == 'order';
+    public function buy(Request $request){
+        $order = Order::get_current_user_order($request->session()->get('user_id'));
+        
+        $order->status = 'order';
         $order->save();
 
         return redirect(url('profile'));
@@ -63,25 +70,42 @@ class productController extends Controller
 
     public function change_product(Request $request){
         $product = Product::find($request->id);
-
-        return view('change_product_form', ['product' => $product]);        
+        $categories = ProductCategory::top_level_categories();
+        return view('admin/update_product', ['product' => $product, 'context'=>'update', 'categories'=>$categories]);
     }
     public function update_product(Request $request){
-        $product = new Product();
+        $product_id = $request->input('id');
+        $product = Product::find($product_id);
         $product->title = $request->input('product_name');
         $product->description = $request->input('product_description');
         $product->price = $request->input('product_price');
-        $product->image_url = $request->input('product_image');
+        
+        if (!$request->file('product_image') == null){
+            $product->image_url = $request->input('product_image');
+        }
+        
+        $categories = $request->input('product_categories');        
+        CategoryHasProducts::where('product_id', '=', $product_id)->delete();
+        
+        foreach($categories as $category){
 
+            $phc = new CategoryHasProducts();            
+            $phc->product_id = $product->id;
+            $phc->category_id = $category;
+
+            $phc->save();
+            
+        }
+        
         $product->update();
 
-        return redirect(route('products'));
+        return redirect(url('/product_categories'));
     }
     public function new_product(){        
 
         $categories = ProductCategory::all();
     
-        return view('admin/add_product', ['categories' => $categories]);        
+        return view('admin/add_product', ['categories' => $categories, 'context'=>'creeate']);        
 
     }
     public function add_product(Request $request){                
@@ -128,5 +152,10 @@ class productController extends Controller
         return view('website/product/categories', ['categories' => $subcategories]);
     }
 
+    public function list_products(Request $request) {
+        $products = Product::all();
+
+        return view('admin/list_products', ['products'=>$products]);
+    }
 
 }

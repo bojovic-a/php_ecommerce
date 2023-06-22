@@ -45,10 +45,10 @@
                 <a class="nav-link" href="{{ url('/admin/new_product') }}">Add Product</a>
                 </li>                        
                 <li class="nav-item p-2">
-                    <a class="nav-link" href="#">About us</a>
+                    <a class="nav-link" href="{{ route('list_products') }}">All Products</a>
                 </li>        
                 <li class="nav-item p-2">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" href="#">Add Post</a>
                 </li>        
             </ul>      
             </div>

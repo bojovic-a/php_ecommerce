@@ -5,6 +5,12 @@
 
 @section('content')
 
+@if(session()->has('message'))
+    <div class="alert alert-success">
+        {{ session()->get('message') }}
+    </div>
+@endif
+
 <div class="container py-4 my-4 mx-auto d-flex flex-column">
     <div class="header">
         <div class="row r1">

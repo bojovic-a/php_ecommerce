@@ -37,7 +37,7 @@ class userController extends Controller
 
 
         $user->save();
-        return view('website/user/profile', ['user'=>$user]);
+        return view('website/user/profile', ['user'=>$user, 'context' => 'register']);
     }
     public function login_form(){
         $categories = ProductCategory::top_level_categories();
@@ -56,11 +56,12 @@ class userController extends Controller
         }        
     }
     public function profile(Request $request){
-        if ($request->session->has('user_id')){
-            $user_id = $request->session->get('user_id');
+        if ($request->session()->has('user_id')){
+            $user_id = $request->session()->get('user_id');
 
             $user = User::find($user_id);            
-            return view('website/user/profile');
+            $categories = ProductCategory::top_level_categories();
+            return view('website/user/profile', ['user'=>$user, 'categories'=>$categories]);
         }
         else {
             return redirect(route('login'));
@@ -69,5 +70,33 @@ class userController extends Controller
     public function logout(Request $request){
         $request->session()->flush();
         return redirect(route('homePage'));
+    }
+    public function update_profile(Request $request){
+        $user = User::find($request->session()->get('user_id'));
+        $categories = ProductCategory::top_level_categories();
+        return view('website/user/register', ['user'=>$user, 'categories'=>$categories, 'context'=>'update']);
+    }
+    public function update_profile_post(Request $request){
+        $user = User::find($request->session()->get('user_id'));
+        
+        $user->username = $request->username;
+        $user->email = $request->email;
+
+        if($request->file('image')){
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            $imageName = time().'.'.$request->product_image->extension();  
+
+            $request->file('image')->move(public_path('images/users'), $imageName);
+            
+            $user->image_url = $imageName;        
+        }
+
+        $user->save();
+
+        return redirect(url('/profile'));
+               
     }
 }

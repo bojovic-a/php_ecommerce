@@ -26,6 +26,7 @@ return new class extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->dateTime('date_time');
+            $table->string('status');
 
             $table->foreign('user_id')->references('id')->on('users');
         });

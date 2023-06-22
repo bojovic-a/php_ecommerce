@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Document</title>
 </head>
 <style>     
@@ -30,6 +31,11 @@
         padding: 0 120px;
         /* background-color: #efefef; */
     }
+    .btn-primary{
+        background-color: darkgoldenrod !important;
+        outline: none !important;
+        border: none !important;
+    }
 </style>
 <body>
     @yield('header')
@@ -53,7 +59,7 @@
                         <a class="nav-link" href="#">Blog</a>
                     </li>        
                     <li class="nav-item p-2">
-                        <a class="nav-link" href="#">About us</a>
+                        <a class="nav-link" href="{{ route('aboutUs') }}">About us</a>
                     </li>        
                     <li class="nav-item p-2">
                         <a class="nav-link" href="#">Contact</a>
@@ -63,6 +69,9 @@
                 @if (isset($user_id))
                     <li class="nav-item p-2">
                         <a class="nav-link" href="{{ route('logout') }}">Logout</a>
+                    </li>
+                    <li class="nav-item p-2">
+                        <a class="nav-link" href="{{ route('cart_show', $user_id) }}"><i class="fa fa-shopping-cart"></i></a>
                     </li>
                 @else
                     <li class="nav-item p-2">
@@ -91,27 +100,7 @@
         <!-- Section: Social media -->
         <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">    
     
-        <!-- Right -->
-        <div>
-            <a href="" class="me-4 text-reset">
-            <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="" class="me-4 text-reset">
-            <i class="fab fa-twitter"></i>
-            </a>
-            <a href="" class="me-4 text-reset">
-            <i class="fab fa-google"></i>
-            </a>
-            <a href="" class="me-4 text-reset">
-            <i class="fab fa-instagram"></i>
-            </a>
-            <a href="" class="me-4 text-reset">
-            <i class="fab fa-linkedin"></i>
-            </a>
-            <a href="" class="me-4 text-reset">
-            <i class="fab fa-github"></i>
-            </a>
-        </div>
+        <!-- Right -->    
         <!-- Right -->
         </section>
         <!-- Section: Social media -->
@@ -141,11 +130,11 @@
                 <div class="d-flex justify-content-lg-between">
                     @foreach($categories as $category)
                     <div class="">
-                        <p> {{$category->naziv}} </p>
+                        <p class="text-dark"> {{$category->naziv}} </p>
                         
                         @foreach($category->product_subcategories() as $subcategory)
                         <div class="subcategory">
-                            <p>{{ $subcategory->naziv }}</p>
+                            <p class="text-dark">{{ $subcategory->naziv }}</p>                            
                         </div>
                         @endforeach
                     </div>

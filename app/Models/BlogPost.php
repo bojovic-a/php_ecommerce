@@ -12,4 +12,7 @@ class BlogPost extends Model
     public function category(){
         $this->belongsTo(BlogCategory::class);
     }
+    public static function add(){
+        
+    }
 }
