@@ -62,7 +62,7 @@
                         <a class="nav-link" href="{{ route('aboutUs') }}">About us</a>
                     </li>        
                     <li class="nav-item p-2">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="{{ route('contact') }}">Contact</a>
                     </li>
                 </div>
                 <div class="d-flex flex-row">

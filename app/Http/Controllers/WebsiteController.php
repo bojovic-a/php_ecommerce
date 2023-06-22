@@ -19,7 +19,8 @@ class WebsiteController extends Controller
     }
 
     public function contact(){
-        return view('website/contact');
+        $categories = ProductCategory::top_level_categories();
+        return view('website/contact', ['categories'=>$categories]);
     }
     public function admin(Request $request){
         if (!$request->session()->get('user_id')){
